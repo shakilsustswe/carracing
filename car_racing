@@ -1,0 +1,1075 @@
+#include <SFML/Graphics.hpp>///use it for graphics
+#include <SFML/Audio.hpp>///use it for sound and music
+#include<sstream>
+#include<ctime>
+#include<iostream>
+#include<windows.h>
+#include "Menu.h"
+#include <iomanip>
+#include <locale>
+
+using namespace sf;
+using namespace std;
+
+string s(double n);
+
+int main()
+{
+b:
+    RenderWindow start(VideoMode(800,800),"Fahim && Shakil ");////
+    //Menu menu(start.getSize().x,start.getSize().y);
+    //////////creating menu//
+    sf::Texture menu_tex;
+    if(!menu_tex.loadFromFile("menu.jpg"))
+    {
+        cout<<"Menu Image Loading Failed"<<endl;
+        return -1;
+
+    }
+    sf::RectangleShape menu;
+    menu.setSize(Vector2f(800,800));
+    menu.setPosition(0, 0);
+    menu.setTexture(&menu_tex);
+    ////Sprite carracing(menu);
+    /////
+    ///sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::RectangleShape rect(Vector2f(300,100));
+    rect.setPosition(250,55);
+    rect.setFillColor(sf::Color::Transparent);
+    rect.setOutlineColor(sf::Color::Red);
+    rect.setOutlineThickness(4);
+https://paste.ubuntu.com/p/52hKv73Pjk/
+    ////window.clear();
+    // window.draw(shape);
+    // window.display();
+    ///sounds////////
+    SoundBuffer buffer;
+    if(!buffer.loadFromFile("s.ogg"))
+    {
+        printf("Error");
+    }
+    //////
+    Sound hit;
+    hit.setBuffer(buffer);
+    hit.setVolume(300);
+    //////
+    /////::::::::::::::setting texture for music/////
+    sf::Texture music_tex;
+    if(!music_tex.loadFromFile("music.jpg"))
+    {
+        cout<<"Music Front Image Loading Failed"<<endl;
+        return -1;
+    }
+    RectangleShape music_front;
+    music_front.setSize(Vector2f(800, 800));
+    music_front.setPosition(0, 0);
+    music_front.setTexture(&music_tex);
+    ////////////
+    /* RectangleShape rect;
+     rect.setSize(Vector2f(185, 35));
+     rect.setPosition(108, 285);
+     rect.setFillColor(Color::Transparent);
+     rect.setOutlineColor(Color::Blue);
+     rect.setOutlineThickness(10.f);*/
+    //////Music
+    Music music;///open music for car racing/
+    if(!music.openFromFile("carsound.ogg"))
+    {
+        printf("Error");
+    }
+    music.setLoop(true);
+    music.setVolume(100);
+    music.play();
+    int music_Button=0,flag=1;
+    //////
+    while(start.isOpen())///open window for start menu
+    {
+
+        Event event;
+        while(start.pollEvent(event))
+        {
+            /* if(Keyboard::isKeyPressed(Keyboard::Enter))
+                 start.close();*/
+
+            if(rect.getPosition().y==55 && Keyboard::isKeyPressed(Keyboard::Enter))
+                start.close();
+            if(rect.getPosition().y<580)
+            {
+                if( Keyboard::isKeyPressed(Keyboard::Down))
+                    rect.setPosition(rect.getPosition().x,rect.getPosition().y+175);
+            }
+            /* if(shape.getPosition().y==230 &&Keyboard::isKeyPressed(Keyboard::Up))
+                 shape.setPosition(Vector2f(250,60));*/
+            if(rect.getPosition().y>55)
+                if( Keyboard::isKeyPressed(Keyboard::Up))
+                    rect.setPosition(rect.getPosition().x,rect.getPosition().y-175);
+            if(rect.getPosition().y==405 && Keyboard::isKeyPressed(Keyboard::Enter))
+            {
+                rect.setPosition(230, 180);
+                rect.setSize(Vector2f(340,110));
+                menu.setPosition(2000, 2000);
+                ///////mode_front.setPosition(2000, 2000);
+                music_front.setPosition(0, 0);
+                music_Button = 1;
+            }
+                 if(music_Button == 1)
+            {
+                music_front.setPosition(0,0);
+                if(rect.getPosition().y==180)
+            {
+                if( Keyboard::isKeyPressed(Keyboard::Down))
+                    rect.setPosition(230,380);
+            }
+
+            if(rect.getPosition().y>180)
+                if( Keyboard::isKeyPressed(Keyboard::Up))
+                    rect.setPosition(rect.getPosition().x,rect.getPosition().y-200);
+
+                    /*if(Keyboard::isKeyPressed(Keyboard::Down))
+                    {
+                        rect.setPosition(230,380);
+                    }
+
+                      if(Keyboard::isKeyPressed(Keyboard::Up) &&rect.getPosition().y == 380)
+                        {
+                            rect.setPosition(230,180);
+                        }*/
+
+                    if(rect.getPosition().x == 230 &&rect.getPosition().y == 180 && Keyboard::isKeyPressed(Keyboard::Enter))
+                    {
+                        music.setVolume(200);
+                       //// buffer.setVolume(200);
+                       flag=1;
+                    }
+                    if(rect.getPosition().x == 230 &&rect.getPosition().y == 380 && Keyboard::isKeyPressed(Keyboard::Enter))
+                    {
+                        music.setVolume(0);
+                        /////buffer.setVolume(0);
+                        flag=0;
+
+                    }
+                    if(Keyboard::isKeyPressed(Keyboard::BackSpace))
+                    {
+                        music_Button = 0;
+                        music_front.setPosition(2000, 2000);
+                        rect.setPosition(250, 55);
+                        rect.setSize(Vector2f(300,100));
+                        menu.setPosition(0, 0);
+                    }
+            }
+            if(rect.getPosition().y==580 && Keyboard::isKeyPressed(Keyboard::Enter))
+                return 0;
+
+            if(event.key.code==Keyboard::Escape)
+                ///start.close();
+                start.clear();
+            /*if(c.type==Event::Closed)
+                start.close();
+            if(c.type==Event::KeyPressed)
+            {
+             if(c.key.code==Keyboard::Enter)
+              goto c;///for enter exit for game
+                 if(c.key.code==Keyboard::Escape)
+                     start.close();////for exit
+
+            }*/
+
+        }
+        start.clear();
+        start.draw(music_front);
+        start.draw(menu);
+        start.draw(rect);
+        ////start.draw(shape);
+        start.display();
+
+    }
+    double score = 0;
+    double live=3,level=1;
+a:
+   srand(time(NULL));///for random number
+    /*float carpos,ecar1pos,ecar2pos,ecar3pos;
+    double score = 0;
+    int x = 0;
+    int speed = 300,i = 0,j = 0,k = 0,randm = 1,xx = 0;
+    randm = rand()% 8+ 1;*/
+    int speed1=0,speed2=0,speed3=0,speed4=0,speed=100;
+    speed1=rand()% 4+ 1;
+    speed2=rand()% 4+ 1;
+    speed3=rand()% 4+ 1;
+    speed4=rand()% 4+ 1;
+    ///speed5=rand()% 4+ 1;
+    /* sf :: RenderWindow window(sf :: VideoMode(800,800),"My First game in sfml",sf :: Style::Close|sf::Style::Resize);//window inform
+     sf :: RectangleShape r0ect(sf::Vector2f(400.0f,800.0f));
+     sf :: Texture roadTexture;
+     if(!roadTexture.loadFromFile("road.png"))
+     cout<<"Could not load the image fill"<<endl;
+         road.setTexture(&roadTexture);*/////////
+
+    //n:
+    //speed = 300;
+
+    /*sf::Clock clock;
+    int countdown = 30;
+     std::string countdownString;
+    std::ostringstream convert;
+    convert << countdown;
+    countdownString = convert.str();*/
+
+
+    int ecar1pos=210,ecar2pos=310,ecar3pos=440,ecar4pos=560,road1pos=0,road2pos=0;
+    int ecar21pos=210,ecar22pos=310,ecar23pos=440,ecar24pos=560;
+    int bframe=0,coinposrand=0;
+    coinposrand=rand()%4+1;
+    ///roadposrand=rand()%4+1;
+    int x=4,y=4;
+    Font myfont;
+    Text myscore;
+    Text mylive;
+    //Text mylevel;
+    Text text1;
+    Text text2;
+    Text text3;
+    ///Text text4;
+    ///Text text4;
+    /////// bool playButton = false;
+    myfont.loadFromFile("shakil.ttf");
+    RenderWindow Window(VideoMode(800,800),"Shakil && Fahim");
+    ///////Menu menu(Window.getSize().x, Window.getSize().y);
+    if(live==0)
+    {
+        while(Window.isOpen())///open window for start menu
+        {
+
+            Event s;
+            while(Window.pollEvent(s))
+            {
+                /* if(Keyboard::isKeyPressed(Keyboard::Enter))
+                     start.close();*/
+                Texture go;
+                go.loadFromFile("gameover.jpg");
+                Sprite gameover(go);
+                Window.clear();
+                Window.draw(gameover);
+                Window.display();
+                //////Sleep(500);
+                if(Keyboard::isKeyPressed(Keyboard::Escape))
+                {
+                    return 0;
+                }
+                if(Keyboard::isKeyPressed(Keyboard::Enter))
+                {
+                    goto b;
+                }
+                //
+                // if(Keyboard::isKeyPressed(Keyboard::Enter)){
+                //// goto b;
+                // }
+
+                /*if(shape.getPosition().y==55 && Keyboard::isKeyPressed(Keyboard::Enter))
+                    start.close();
+                    if(shape.getPosition().y<405)
+                if( Keyboard::isKeyPressed(Keyboard::Down))
+                    shape.setPosition(Vector2f(shape.getPosition().x,shape.getPosition().y+175));
+                    if(shape.getPosition().y>55)
+                if( Keyboard::isKeyPressed(Keyboard::Up))
+                    shape.setPosition(Vector2f(shape.getPosition().x,shape.getPosition().y-175));
+                if(shape.getPosition().y==405 && Keyboard::isKeyPressed(Keyboard::Enter))
+                    return 0;
+
+                if(s.key.code==Keyboard::Escape)
+                    ///start.close();
+                    start.clear();*/
+                /*if(c.type==Event::Closed)
+                    start.close();
+                if(c.type==Event::KeyPressed)
+                {
+                 if(c.key.code==Keyboard::Enter)
+                  goto c;///for enter exit for game
+                     if(c.key.code==Keyboard::Escape)
+                         start.close();////for exit
+
+                }*/
+
+            }
+        }
+
+    }
+    /*while(window.isOpen())///open window for start menu
+    {
+        Texture st;
+        st.loadFromFile("menu.jpg");
+        Sprite start(st);
+        window.clear();
+        window.draw(start);     ///open photo from pc
+        window.display();
+        Event b;
+        while(window.pollEvent(b))
+        {
+            if(b.type == Event::Closed)
+                window.close();
+            if(b.type==Event::KeyPressed)
+            {
+                if(b.key.code==Keyboard::Enter)
+                    goto a;///for enter exit for game
+                    if(b.key.code==Keyboard::Escape)
+                        window.close();////for exit
+
+            }
+
+        }
+    }
+    a:*/
+
+    /* Music music;///open music for car racing/
+     if(!music.openFromFile("carsound.ogg"))
+     {
+         printf("Error");
+     }*/
+
+
+
+
+    /*SoundBuffer buffer;
+    if(!buffer.loadFromFile("s.ogg"))
+    {
+        printf("Error");
+    }
+    //////
+    Sound hit;
+    hit.setBuffer(buffer);
+    hit.setVolume(300);
+    //////
+    sf::Texture music_tex;
+    if(!music_tex.loadFromFile("music.jpg"))
+    {
+        cout<<"Music Front Image Loading Failed"<<endl;
+        return -1;
+    }
+    RectangleShape rect;
+    rect.setSize(Vector2f(185, 35));
+    rect.setPosition(108, 285);
+    rect.setFillColor(Color::Transparent);
+    rect.setOutlineColor(Color::Blue);
+    rect.setOutlineThickness(10.f);*/
+    ///
+    Texture q1;
+    q1.loadFromFile("roads.png ");
+    Sprite road1(q1);
+    //road.setPosition(0,-800);
+    road1.setPosition(0,0);
+    //////////
+    /////Texture q2;
+    ////q2.loadFromFile("in.jpg");
+    Sprite road2(q1);
+    road2.setPosition(0,-1500);
+    ////road2.setPosition(road2pos,-1605);
+
+
+    /*sf :: RectangleShape road(sf::Vector2f(810.0f,1200.0f));
+    sf :: Texture roadTexture;
+    if(!roadTexture.loadFromFile("road.png"))
+        cout<<"Could not load the image fill"<<endl;
+    // road.setTexture(&roadTexture);*/
+    /// sf::Image::getSize	(20);
+
+    Texture p2;
+    p2.loadFromFile("car.png");
+    Sprite car(p2);
+    car.setPosition(365,700);
+
+    Texture p3;
+    p3.loadFromFile("ecar.png");
+    Sprite ecar1(p3);
+    ecar1.setPosition(210,-120);
+
+    Texture p4;
+    p4.loadFromFile("ecar.png");
+    Sprite ecar2(p4);
+    ecar2.setPosition(310,-120);
+
+    Texture p5;
+    p5.loadFromFile("ecar.png");
+    Sprite ecar3(p5);
+    ecar3.setPosition(440,-120);
+
+    Texture p7;
+    p7.loadFromFile("ecar.png");
+    Sprite ecar4(p7);
+    ecar4.setPosition(560,-120);
+
+
+    Texture p20;
+    p20.loadFromFile("ecar2.png");
+    Sprite ecar21(p20);
+    ecar21.setPosition(210,-120);
+
+    Texture p21;
+    p21.loadFromFile("ecar2.png");
+    Sprite ecar22(p21);
+    ecar22.setPosition(310,-120);
+
+    Texture p22;
+    p22.loadFromFile("ecar2.png");
+    Sprite ecar23(p20);
+    ecar23.setPosition(440,-120);
+
+    Texture p23;
+    p23.loadFromFile("ecar2.png");
+    Sprite ecar24(p23);
+    ecar24.setPosition(560,-120);
+//////////////////
+    Texture p8;
+    p8.loadFromFile("coin.png");
+    Sprite coin(p8);
+    coin.setPosition(440,-120);
+    Texture p9;
+    p9.loadFromFile("icon.png");
+    Sprite icon(p9);
+    icon.setPosition(400,400);
+
+    Texture p6;
+    p6.loadFromFile("boom.jpg");
+    Sprite boom(p6);
+    /////
+    if(!myfont.loadFromFile("shakil.ttf"))///to add text
+        printf("Error");
+
+
+    //music.play();///to play car sound
+    ///music.setLoop(true);///to repeat car sound
+
+///Music music;///open music for car racing/
+    /*if(!music.openFromFile("carsound.ogg"))
+    {
+        printf("Error");
+    }
+    music.setLoop(true);
+    music.setVolume(100);
+    music.play();*/
+
+    while(Window.isOpen()&&score<=300)///to open window///game loop
+    {
+        ///score
+        myscore.setFont(myfont);
+        myscore.setString(s(score));
+        myscore.setCharacterSize(25);
+        myscore.setColor(Color(250,0,0));
+        myscore.setPosition(110,40);
+        score+=0.01; ///this score will change to string
+        speed+=0.01;
+        ////////
+        text1.setFont(myfont);
+        text1.setString("CAR RACING");///write text to print it
+        text1.setCharacterSize(20);///text size
+        text1.setColor(Color(255,0,0));///text color
+        text1.setPosition(10,5);///text position
+
+        //////
+        text2.setFont(myfont);
+        text2.setString("SCORE:");///write text to print it
+        text2.setCharacterSize(25);///text size
+        text2.setColor(Color(255,0,0));///text color
+        text2.setPosition(10,40);
+        ///////
+        mylive.setFont(myfont);
+        mylive.setString(s(live));
+        mylive.setCharacterSize(30);
+        mylive.setColor(Color(255,0,0));
+        mylive.setPosition(80,410);
+        //////////
+        text3.setFont(myfont);
+        text3.setString("live:");///write text to print it
+        text3.setCharacterSize(40);///text size
+        text3.setColor(Color(255,0,0));///text color
+        text3.setPosition(10,400);///text position
+        ///
+        /*text4.setFont(myfont);
+        text4.setString("2018831072");///write text to print it
+        text4.setCharacterSize(40);///text size
+        text4.setColor(Color(255,0,0));///text color
+        text4.setPosition(400,120);///text position*/
+        ////////////////////////game loop////////
+        Window.setFramerateLimit(speed);
+        Event e;
+        while(Window.pollEvent(e))
+        {
+            if(e.type==Event::Closed)
+                Window.close();
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Left)&&car.getPosition().x>200)///left side move
+        {
+            car.move(-x,0);
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Right)&&car.getPosition().x<560)///right side move
+        {
+            car.move(x,0);
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Up)&&car.getPosition().y>0)///up side move
+        {
+            car.move(0,-y);
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Down)&&car.getPosition().y<700)///down side move
+        {
+            car.move(0,y);
+        }
+        /*if(road.getPosition().y>=-20)
+        road.setPosition(roadpos,-1200);*/
+        if(ecar1.getPosition().y>=800)
+            ecar1.setPosition(ecar1pos,-120);
+        if(ecar2.getPosition().y>=800)
+            ecar2.setPosition(ecar2pos,-120);
+        if(ecar3.getPosition().y>=800)
+            ecar3.setPosition(ecar3pos,-120);
+
+        if(ecar4.getPosition().y>=800)
+            ecar4.setPosition(ecar4pos,-120);
+        /////////////////////////
+        ecar1.move(0,speed1/2+1);      ///to set position for cars
+        ecar2.move(0,speed2/2+1.5);      ///to set position for cars
+        ecar3.move(0,speed3/2+0.25);      ///to set position for cars
+        ecar4.move(0,speed4/2+.75);      ///to set position for cars
+        ///////////
+        // if(road.getPosition().y>=-20)
+        // speed5=rand()%4+1;
+        if(ecar1.getPosition().y>=800)
+            speed1=rand()%4+1;
+        if(ecar2.getPosition().y>=800)
+            speed2=rand()%4+1;
+        if(ecar3.getPosition().y>=800)
+            speed3=rand()%4+1;
+        if(ecar4.getPosition().y>=800)
+            speed4=rand()%4+1;
+        /////
+        //if(road.getPosition().y>=-1200)
+        ///speed5=rand()%4+1;
+        if(ecar1.getPosition().y>=-120)
+            speed1=rand()%4+1;
+        if(ecar2.getPosition().y>=-120)
+            speed2=rand()%4+1;
+        if(ecar3.getPosition().y>=-120)
+            speed3=rand()%4+1;
+        if(ecar4.getPosition().y>=-120)
+            speed4=rand()%4+1;
+        /////////////////////
+        if(car.getGlobalBounds().intersects(ecar1.getGlobalBounds())||
+                car.getGlobalBounds().intersects(ecar2.getGlobalBounds())||
+                car.getGlobalBounds().intersects(ecar3.getGlobalBounds())||
+                car.getGlobalBounds().intersects(ecar4.getGlobalBounds()))
+        {
+
+            music.pause();
+            if(flag==1){
+            Sound crash;
+            crash.setBuffer(buffer);
+            crash.play();
+            }
+           /* if(flag==1)
+            {
+                crash.play();
+            }
+            else
+            {
+                Sound crash;
+                crash.setBuffer(buffer);
+                crash.play();
+            }*/
+
+            for(bframe=0; bframe<580; bframe+=200)
+            {
+                /*b
+                oom.setTextureRect(IntRect(bframe,256,200,200));*/
+                // Texture p6;
+                //// p6.loadFromFile("boom.jpg");
+                ///Sprite boom(p6);
+                boom.setPosition(car.getPosition().x-100,car.getPosition().y-100);
+                Window.draw(boom);
+                Window.display();
+                Sleep(500);
+            }
+            live--;
+            goto a;
+        }
+        ////////coin/////////
+        if(Keyboard::isKeyPressed(Keyboard::Escape))///down side move
+        {
+            goto b;
+        }
+       /* if(Keyboard::isKeyPressed(Keyboard::F11))///down side move
+        {
+            music.pause();
+            flag=0;
+        }
+        if(Keyboard::isKeyPressed(Keyboard::F12))
+        {
+            music.play();
+            flag=1;
+        }*/
+
+
+
+       /* bool gamePause=false;
+         int timer = clock.getElapsedTime().asSeconds();
+         std::cout << timer << std::endl;
+         if (timer > 0) {
+                    countdown--;
+                    convert << countdown;
+                    countdownString = convert.str();
+                    myscore.setString(countdownString);
+                    clock.restart();
+                }
+		if(Keyboard::isKeyPressed(Keyboard::Tab))
+		{
+			gamePause = true;
+			while(gamePause == true)
+			{
+				std::cout << "GAME PAUSED" << std::endl;
+				//delay before able to unpause
+				if(timer > 1)
+				{
+					if(Keyboard::isKeyPressed(Keyboard::Tab))
+					{
+						gamePause = false;
+						std::cout << "GAME UNPAUSED" << std::endl;
+					}
+				}
+			}
+        clock.restart();
+		}
+*/
+
+
+
+        /*if(Keyboard::isKeyPressed(Keyboard::Tab))
+        {
+          Event.pause();
+
+        }*/
+
+        if(car.getGlobalBounds().intersects(coin.getGlobalBounds()))
+        {
+            if(coinposrand==1)
+                coin.setPosition(210,-120);
+            if(coinposrand==2)
+                coin.setPosition(310,-120);
+            if(coinposrand==3)
+                coin.setPosition(440,-120);
+            if(coinposrand==4)
+                coin.setPosition(560,-120);
+            score=score+100;
+        }
+        if(coin.getPosition().y>=810)
+        {
+            if(coinposrand==1)
+                coin.setPosition(210,-120);
+            if(coinposrand==2)
+                coin.setPosition(310,-120);
+            if(coinposrand==3)
+                coin.setPosition(440,-120);
+            if(coinposrand==4)
+                coin.setPosition(560,-120);
+            coinposrand=rand()%4+1;
+        }
+        ///////////
+        /*if(road.getPosition().y>=0)
+            {
+                 road.setPosition(0,-800);
+            }*/
+        ///Event r;
+
+
+        if(road1.getPosition().y>=1500)
+        {
+            /// q2.loadFromFile("road.jpg");
+            ///Sprite road(q1);
+            road1.setPosition(0,-1500);
+
+        }
+
+        if(road2.getPosition().y>=1500)
+        {
+            ///q1.loadFromFile("road.jpg");
+            ///////////Sprite road(q2);
+            road2.setPosition(0,-1500);
+            /*if(roadposrand==1)
+                road.setPosition(0,-800);
+            if(roadposrand==2)
+                road.setPosition(0,-800);
+            if(roadposrand==3)
+                road.setPosition(0,-800);
+            if(roadposrand==4)
+                road.setPosition(0,-800);
+            roadposrand=rand()%4+1;*/
+        }
+        /*if(Keyboard::isKeyPressed(Keyboard::Tab))
+        {
+            while(Window.isOpen())///open window for start menu
+            {
+
+                Event r;
+                while(Window.pollEvent(r))
+                {
+                    Texture go;
+                    go.loadFromFile("icon.png");
+                    Sprite icon(go);
+                    Window.draw(icon);
+                    Window.clear();
+                    Window.display();
+                    //////Sleep(500);
+                    if(Keyboard::isKeyPressed(Keyboard::Tab))
+                    {
+                        goto b;
+                    }
+                    //
+                    // if(Keyboard::isKeyPressed(Keyboard::Enter)){
+                    //// goto b;
+                    // }
+
+                }
+            }
+            Window.draw(road1);
+            Window.draw(road2);
+            Window.display();
+
+        }*/
+
+        //
+        road1.move(0,2);
+        road2.move(0,2);
+        coin.move(0,4);
+        //roadposrand=rand()%4+1;
+        coinposrand=rand()%4+1;
+        Window.clear();
+        Window.draw(road1);
+        Window.draw(road2);
+        ///Window.clear();
+        Window.draw(coin);
+        Window.draw(car);
+        Window.draw(ecar1);
+        Window.draw(ecar2);    ///to display photo
+        Window.draw(ecar3);
+        Window.draw(ecar4);
+        Window.draw(myscore);
+        Window.draw(mylive);
+        Window.draw(text1);
+        Window.draw(text2);
+        Window.draw(text3);
+        ////window.draw(text4);
+        Window.display();
+    }
+        while(Window.isOpen())///to open window///game loop
+    {
+        ///score
+        myscore.setFont(myfont);
+        myscore.setString(s(score));
+        myscore.setCharacterSize(25);
+        myscore.setColor(Color(250,0,0));
+        myscore.setPosition(110,40);
+        score+=0.05; ///this score will change to string
+        speed+=0.05;
+        ////////
+        text1.setFont(myfont);
+        text1.setString("CAR RACING");///write text to print it
+        text1.setCharacterSize(20);///text size
+        text1.setColor(Color(255,0,0));///text color
+        text1.setPosition(10,5);///text position
+
+        //////
+        text2.setFont(myfont);
+        text2.setString("SCORE:");///write text to print it
+        text2.setCharacterSize(25);///text size
+        text2.setColor(Color(255,0,0));///text color
+        text2.setPosition(10,40);
+        ///////
+        mylive.setFont(myfont);
+        mylive.setString(s(live));
+        mylive.setCharacterSize(30);
+        mylive.setColor(Color(255,0,0));
+        mylive.setPosition(80,410);
+        //////////
+        text3.setFont(myfont);
+        text3.setString("live:");///write text to print it
+        text3.setCharacterSize(40);///text size
+        text3.setColor(Color(255,0,0));///text color
+        text3.setPosition(10,400);///text position
+        ///
+        /*text4.setFont(myfont);
+        text4.setString("2018831072");///write text to print it
+        text4.setCharacterSize(40);///text size
+        text4.setColor(Color(255,0,0));///text color
+        text4.setPosition(400,120);///text position*/
+        ////////////////////////game loop////////
+        Window.setFramerateLimit(speed);
+        Event e;
+        while(Window.pollEvent(e))
+        {
+            if(e.type==Event::Closed)
+                Window.close();
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Left)&&car.getPosition().x>200)///left side move
+        {
+            car.move(-x,0);
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Right)&&car.getPosition().x<560)///right side move
+        {
+            car.move(x,0);
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Up)&&car.getPosition().y>0)///up side move
+        {
+            car.move(0,-y);
+        }
+        if(Keyboard::isKeyPressed(Keyboard::Down)&&car.getPosition().y<700)///down side move
+        {
+            car.move(0,y);
+        }
+        /*if(road.getPosition().y>=-20)
+        road.setPosition(roadpos,-1200);*/
+        if(ecar21.getPosition().y>=800)
+            ecar21.setPosition(ecar21pos,-120);
+        if(ecar22.getPosition().y>=800)
+            ecar22.setPosition(ecar22pos,-120);
+        if(ecar23.getPosition().y>=800)
+            ecar23.setPosition(ecar23pos,-120);
+        if(ecar24.getPosition().y>=800)
+            ecar24.setPosition(ecar24pos,-120);
+        /////////////////////////
+        ecar21.move(0,speed1/2+1);      ///to set position for cars
+        ecar22.move(0,speed2/2+1.5);      ///to set position for cars
+        ecar23.move(0,speed3/2+0.25);      ///to set position for cars
+        ecar24.move(0,speed4/2+.75);      ///to set position for cars
+        ///////////
+        // if(road.getPosition().y>=-20)
+        // speed5=rand()%4+1;
+        if(ecar21.getPosition().y>=800)
+            speed1=rand()%4+1;
+        if(ecar22.getPosition().y>=800)
+            speed2=rand()%4+1;
+        if(ecar23.getPosition().y>=800)
+            speed3=rand()%4+1;
+        if(ecar24.getPosition().y>=800)
+            speed4=rand()%4+1;
+        /////
+        //if(road.getPosition().y>=-1200)
+        ///speed5=rand()%4+1;
+        if(ecar21.getPosition().y>=-120)
+            speed1=rand()%4+1;
+        if(ecar22.getPosition().y>=-120)
+            speed2=rand()%4+1;
+        if(ecar23.getPosition().y>=-120)
+            speed3=rand()%4+1;
+        if(ecar24.getPosition().y>=-120)
+            speed4=rand()%4+1;
+        /////////////////////
+        if(car.getGlobalBounds().intersects(ecar21.getGlobalBounds())||
+                car.getGlobalBounds().intersects(ecar22.getGlobalBounds())||
+                car.getGlobalBounds().intersects(ecar23.getGlobalBounds())||
+                car.getGlobalBounds().intersects(ecar24.getGlobalBounds()))
+        {
+            music.pause();
+            if(flag==1)
+            {
+            Sound crash;
+            crash.setBuffer(buffer);
+            crash.play();
+            }
+           /* if(flag==1)
+            {
+                crash.play();
+            }
+            else
+            {
+                Sound crash;
+                crash.setBuffer(buffer);
+                crash.play();
+            }*/
+
+            for(bframe=0; bframe<580; bframe+=200)
+            {
+                /*b
+                oom.setTextureRect(IntRect(bframe,256,200,200));*/
+                // Texture p6;
+                //// p6.loadFromFile("boom.jpg");
+                ///Sprite boom(p6);
+                boom.setPosition(car.getPosition().x-100,car.getPosition().y-100);
+                Window.draw(boom);
+                Window.display();
+                Sleep(500);
+            }
+            live--;
+            goto a;
+        }
+        ////////coin/////////
+        if(Keyboard::isKeyPressed(Keyboard::Escape))///down side move
+        {
+            goto b;
+        }
+       /* if(Keyboard::isKeyPressed(Keyboard::F11))///down side move
+        {
+            music.pause();
+            flag=0;
+        }
+        if(Keyboard::isKeyPressed(Keyboard::F12))
+        {
+            music.play();
+            flag=1;
+        }*/
+
+
+
+       /* bool gamePause=false;
+         int timer = clock.getElapsedTime().asSeconds();
+         std::cout << timer << std::endl;
+         if (timer > 0) {
+                    countdown--;
+                    convert << countdown;
+                    countdownString = convert.str();
+                    myscore.setString(countdownString);
+                    clock.restart();
+                }
+		if(Keyboard::isKeyPressed(Keyboard::Tab))
+		{
+			gamePause = true;
+			while(gamePause == true)
+			{
+				std::cout << "GAME PAUSED" << std::endl;
+				//delay before able to unpause
+				if(timer > 1)
+				{
+					if(Keyboard::isKeyPressed(Keyboard::Tab))
+					{
+						gamePause = false;
+						std::cout << "GAME UNPAUSED" << std::endl;
+					}
+				}
+			}
+        clock.restart();
+		}
+*/
+
+
+
+        /*if(Keyboard::isKeyPressed(Keyboard::Tab))
+        {
+          Event.pause();
+
+        }*/
+
+        if(car.getGlobalBounds().intersects(coin.getGlobalBounds()))
+        {
+            if(coinposrand==1)
+                coin.setPosition(210,-120);
+            if(coinposrand==2)
+                coin.setPosition(310,-120);
+            if(coinposrand==3)
+                coin.setPosition(440,-120);
+            if(coinposrand==4)
+                coin.setPosition(560,-120);
+            score=score+100;
+        }
+        if(coin.getPosition().y>=810)
+        {
+            if(coinposrand==1)
+                coin.setPosition(210,-120);
+            if(coinposrand==2)
+                coin.setPosition(310,-120);
+            if(coinposrand==3)
+                coin.setPosition(440,-120);
+            if(coinposrand==4)
+                coin.setPosition(560,-120);
+            coinposrand=rand()%4+1;
+        }
+        ///////////
+        /*if(road.getPosition().y>=0)
+            {
+                 road.setPosition(0,-800);
+            }*/
+        ///Event r;
+
+
+        if(road1.getPosition().y>=1500)
+        {
+            /// q2.loadFromFile("road.jpg");
+            ///Sprite road(q1);
+            road1.setPosition(0,-1500);
+
+        }
+
+        if(road2.getPosition().y>=1500)
+        {
+            ///q1.loadFromFile("road.jpg");
+            ///////////Sprite road(q2);
+            road2.setPosition(0,-1500);
+            /*if(roadposrand==1)
+                road.setPosition(0,-800);
+            if(roadposrand==2)
+                road.setPosition(0,-800);
+            if(roadposrand==3)
+                road.setPosition(0,-800);
+            if(roadposrand==4)
+                road.setPosition(0,-800);
+            roadposrand=rand()%4+1;*/
+        }
+        /*if(Keyboard::isKeyPressed(Keyboard::Tab))
+        {
+            while(Window.isOpen())///open window for start menu
+            {
+
+                Event r;
+                while(Window.pollEvent(r))
+                {
+                    Texture go;
+                    go.loadFromFile("icon.png");
+                    Sprite icon(go);
+                    Window.draw(icon);
+                    Window.clear();
+                    Window.display();
+                    //////Sleep(500);
+                    if(Keyboard::isKeyPressed(Keyboard::Tab))
+                    {
+                        goto b;
+                    }
+                    //
+                    // if(Keyboard::isKeyPressed(Keyboard::Enter)){
+                    //// goto b;
+                    // }
+
+                }
+            }
+            Window.draw(road1);
+            Window.draw(road2);
+            Window.display();
+
+        }*/
+
+        //
+        road1.move(0,4);
+        road2.move(0,4);
+        coin.move(0,6);
+        //roadposrand=rand()%4+1;
+        coinposrand=rand()%4+1;
+        Window.clear();
+        Window.draw(road1);
+        Window.draw(road2);
+        ///Window.clear();
+        Window.draw(coin);
+        Window.draw(car);
+        Window.draw(ecar21);
+        Window.draw(ecar22);    ///to display photo
+        Window.draw(ecar23);
+        Window.draw(ecar24);
+        Window.draw(myscore);
+        Window.draw(mylive);
+        Window.draw(text1);
+        Window.draw(text2);
+        Window.draw(text3);
+        ////window.draw(text4);
+        Window.display();
+    }
+    return 0;
+}
+string s(double n) ///this function to change number to string and use it for score
+{
+    stringstream ss;
+    ss<<n;
+    return ss.str();
+}
+
